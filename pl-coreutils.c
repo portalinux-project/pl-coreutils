@@ -2,13 +2,17 @@
 
 void plCUPrintHelp(){
 	puts("PortaLinux Core Utilities v0.01");
-	printf("(c)2024 CinnamonWolfy & Co., Under MIT License\n\n")
+	puts("(c)2024 CinnamonWolfy & Co, Under MIT License\n")
 
 	puts("pl-coreutils is a multi-call binary containing all of the core utilities for the PortaLinux OS.");
 	printf("To use this package, you must make symbolic/hard links for the desired command, like so:\n\n");
 	puts("	ln -s /bin/pl-coreutils /bin/ls");
 	puts("	ls -lh / # symlink to pl-coreutils");
-	puts("Alternatively, you can run pl-coreutils with the `--install` flag, and pl-coreutils will install everything for you");
+	puts("Alternatively, you can run pl-coreutils with the `--install` flag, and pl-coreutils will install everything for you\n");
+
+	puts("Credits:");
+	puts("CinnamonWolfy - Multicall mechanism, loadkmap/keyb, login");
+	puts("mothcompute - The rest of the commands")
 
 	exit(0);
 }
@@ -35,5 +39,5 @@ int main(int argc, char* argv[]){
 		.size = argc
 	};
 
-	return plCULibraryMain(args);
+	return plCUMulticall(args);
 }
