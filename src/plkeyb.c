@@ -1,15 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdint.h>
-#include <stdbool.h>
-#include <fcntl.h>
-#include <unistd.h>
-#include <sys/ioctl.h>
-#include <linux/kd.h>
-#include <linux/keyboard.h>
-
-#define EMBEDDED_NR_KEYS 128
+#include <pl-coreutils.h>
 
 char* keyPaths[3] = { "/etc/keymaps/", "/opt/share/keymaps/", "/usr/share/keymaps/" };
 
@@ -18,33 +7,7 @@ void printArgsError(){
 	fputs("Run `plkeyb --help` for more information\n", stderr);
 }
 
-void loadKeymap(int keymapFile, int consoleFile){
-	char keyFlags[MAX_NR_KEYMAPS];
-	uint16_t keyValues[EMBEDDED_NR_KEYS];
-	struct kbentry keyEntry;
-
-	read(keymapFile, keyFlags, 7);
-	if(strcmp(keyFlags, "bkeymap") != 0){
-		fputs("Invalid keymap\n", stderr);
-		exit(4);
-	}
-
-	read(keymapFile, keyFlags, MAX_NR_KEYMAPS);
-	for(int i = 0; i < MAX_NR_KEYMAPS; i++){
-		if(keyFlags[i] != 1)
-			continue;
-
-		read(keymapFile, keyValues, EMBEDDED_NR_KEYS * sizeof(uint16_t));
-		for(int j = 0; j < EMBEDDED_NR_KEYS; j++){
-			keyEntry.kb_index = j;
-			keyEntry.kb_table = i;
-			keyEntry.kb_value = keyValues[j];
-			ioctl(consoleFile, KDSKBENT, &keyEntry);
-		}
-	}
-}
-
-int main(int argc, char* argv[]){
+int plkeyb_main(int argc, char* argv[]){
 	bool keymapIsPath = false;
 	char* activeKeyPath = NULL;
 	char keymapName[256] = "";
@@ -119,7 +82,7 @@ int main(int argc, char* argv[]){
 		return 2;
 	}
 
-	loadKeymap(keymapfd, consolefd);
+	plCULoadKeyboardMap(keymapfd, consolefd);
 
 	close(consolefd);
 	close(keymapfd);
