@@ -1,6 +1,6 @@
 #include <pl-coreutils.h>
-#include <errno.h>
 #include <config.h>
+#include <errno.h>
 
 /********************************************
 
@@ -36,8 +36,16 @@ int plCULoadKeyboardMap(int mapFile, int consoleFile){
 	return 0;
 }
 
+/********************************************
+
+plCUCheckPassword: Checks if the password given matches the actual
+		   password of the username given
+Returns: 0 when password matches
+	-1 when password doesn't match
+
+********************************************/
+
 int plCUCheckPassword(char* username, char* password){
-	//TODO: Implement password checks
 	if(username == NULL || password == NULL)
 		plRTPanic("plCUCheckPassword", PLRT_ERROR | PLRT_NULL_PTR, true);
 
@@ -47,12 +55,23 @@ int plCUCheckPassword(char* username, char* password){
 		exit(2);
 	}
 
-	if(userEntryPtr->pw_passwd == NULL)
-		return 1;
+	char hashedPassword; // TODO: implement this
+	if((userEntryPtr->pw_passwd == NULL && strcmp(password, "") != 0) || strcmp(userEntryPtr->pw_passwd, hashedPassword) != 0)
+		return -1;
+
+	return 0;
 }
 
-int plCUMulticall(plptr_t* args){
+/***********************************************
+
+plCUMulticall: Multi-call entrypoint
+Returns: 0 to 255 (Depends on routine called)
+
+***********************************************/
+
+int plCUMulticall(plptr_t* args, plmt_t* mt, plarray_t* commandList){
 	char* rawArgs = args.pointer;
+	plcucmdlist_t* rawCmdList = commandList.pointer;
 	if(strcmp(rawArgs[0], "true") == 0){
 		return 0;
 	}else if(strcmp(rawArgs[0], "false") == 0){
@@ -75,7 +94,16 @@ int plCUMulticall(plptr_t* args){
 		//TODO: Finish implementing multi-call mechanism
 		return 1;
 
-		
+		int i = 0;
+		while(i < commandList.size && strcmp(commandList[i].name, rawArgs[0]) != 0)
+			i++;
+
+		if(i >= commandList.size){
+			puts("Error: Applet not found");
+			return 127;
+		}
+
+		return rawCmdList[i].function(args, mt);
 	}
 
 	return 0;

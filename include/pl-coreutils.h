@@ -13,6 +13,11 @@
 #include <linux/keyboard.h>
 #define EMBEDDED_NR_KEYS 128
 
+typedef struct plcucmdlist {
+	int (*function)(plarray_t*, plmt_t*);
+	char* name;
+} plcucmdlist_t;
+
 int plCULoadKeyboardMap(int mapFile, int consoleFile);
 int plCUCheckPassword(char* username, char* password);
-int plCUMulticall(plptr_t* args);
+int plCUMulticall(plptr_t* args, plmt_t* mt, plarray_t commandList);

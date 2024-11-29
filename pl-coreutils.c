@@ -1,4 +1,5 @@
 #include <pl-coreutils.h>
+#include <config.h>
 
 void plCUPrintHelp(){
 	puts("PortaLinux Core Utilities v0.01");
@@ -34,10 +35,16 @@ int main(int argc, char* argv[]){
 			plCUPrintHelp();
 	}
 
+	plmt_t* mt = plMTInit(32 * 1024);
 	plptr_t* args = {
 		.pointer = argv,
 		.size = argc
 	};
+	plcucmdlist_t cmdList[PLCU_APPLET_AMNT];
+	int i = 0;
 
-	return plCUMulticall(args);
+	#include <applets.h>
+
+	plarray_t commandList
+	return plCUMulticall(args, mt, commandList);
 }
