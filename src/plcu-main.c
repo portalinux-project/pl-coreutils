@@ -91,9 +91,6 @@ int plCUMulticall(plptr_t* args, plmt_t* mt, plarray_t* commandList){
 			fputs(stdout, "\n")
 		}
 	}else{
-		//TODO: Finish implementing multi-call mechanism
-		return 1;
-
 		int i = 0;
 		while(i < commandList.size && strcmp(commandList[i].name, rawArgs[0]) != 0)
 			i++;
