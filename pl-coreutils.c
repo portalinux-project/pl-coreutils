@@ -19,9 +19,9 @@ void plCUPrintHelp(){
 }
 
 void plCUCreateSymlinks(){
-	printf("Creating symlinks...")
+	printf("Creating symlinks...");
 	//TODO: Implement symlinks
-	puts("Done.")
+	puts("Error: Not implemented");
 	exit(0);
 }
 
@@ -45,6 +45,6 @@ int main(int argc, char* argv[]){
 
 	#include <applets.h>
 
-	plarray_t commandList
+	plarray_t commandList = { .pointer = &cmdList, .size = PLCU_APPLET_AMNT };
 	return plCUMulticall(args, mt, commandList);
 }

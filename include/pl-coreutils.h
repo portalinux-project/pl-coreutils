@@ -13,6 +13,17 @@
 #include <linux/keyboard.h>
 #define EMBEDDED_NR_KEYS 128
 
+/**************************************************************
+
+ADD_ENTRY: Macro to add an applet entry. Used within applets.h
+
+**************************************************************/
+
+#define ADD_ENTRY(name, functionPtr) \
+	cmdList[i].name = name; \
+	cmdList[i].function = functionPtr; \
+	i++;
+
 typedef struct plcucmdlist {
 	int (*function)(plarray_t*, plmt_t*);
 	char* name;
