@@ -93,7 +93,7 @@ int plCUMulticall(plptr_t args, plmt_t* mt, plptr_t commandList){
 		}
 	}else{
 		int i = 0;
-		while(i < commandList.size && strcmp(rawCmdList[i].name, rawArgs[0]) != 0)
+		while(i < commandList.size && strcmp(rawCmdList[i].name, basename(rawArgs[0])) != 0)
 			i++;
 
 		if(i >= commandList.size){

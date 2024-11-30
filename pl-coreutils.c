@@ -1,6 +1,7 @@
 #include <pl-coreutils.h>
 #include <config.h>
 
+#include <applets.h>
 #define PLCU_APPLET_AMNT 1
 
 void plCUPrintHelp(){
@@ -28,7 +29,7 @@ void plCUCreateSymlinks(){
 }
 
 int main(int argc, char* argv[]){
-	bool isPLCUName = (strcmp(argv[0], "pl-coreutils") == 0);
+	bool isPLCUName = (strcmp(basename(argv[0]), "pl-coreutils") == 0);
 
 	if(isPLCUName){
 		if(argc > 2 && strcmp(argv[1], "--install") == 0)
@@ -43,10 +44,8 @@ int main(int argc, char* argv[]){
 		.size = argc
 	};
 	plcucmdlist_t cmdList[PLCU_APPLET_AMNT];
-	int i = 0;
 
-	#include <applets.h>
-
-	plarray_t commandList = { .pointer = &cmdList, .size = PLCU_APPLET_AMNT };
+	plCUFillEntryList(cmdList);
+	plptr_t commandList = { .pointer = &cmdList, .size = PLCU_APPLET_AMNT };
 	return plCUMulticall(args, mt, commandList);
 }
