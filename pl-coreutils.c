@@ -1,9 +1,11 @@
 #include <pl-coreutils.h>
 #include <config.h>
 
+#define PLCU_APPLET_AMNT 1
+
 void plCUPrintHelp(){
 	puts("PortaLinux Core Utilities v0.01");
-	puts("(c)2024 CinnamonWolfy & Co, Under MIT License\n")
+	puts("(c)2024 CinnamonWolfy & Co, Under MIT License\n");
 
 	puts("pl-coreutils is a multi-call binary containing all of the core utilities for the PortaLinux OS.");
 	printf("To use this package, you must make symbolic/hard links for the desired command, like so:\n\n");
@@ -13,7 +15,7 @@ void plCUPrintHelp(){
 
 	puts("Credits:");
 	puts("CinnamonWolfy - Multicall mechanism, loadkmap/keyb, login");
-	puts("mothcompute - The rest of the commands")
+	puts("mothcompute - The rest of the commands");
 
 	exit(0);
 }
@@ -26,7 +28,7 @@ void plCUCreateSymlinks(){
 }
 
 int main(int argc, char* argv[]){
-	bool isPLCUName = (strcmp(argv[0], "pl-coreutils") == 0)
+	bool isPLCUName = (strcmp(argv[0], "pl-coreutils") == 0);
 
 	if(isPLCUName){
 		if(argc > 2 && strcmp(argv[1], "--install") == 0)
@@ -36,7 +38,7 @@ int main(int argc, char* argv[]){
 	}
 
 	plmt_t* mt = plMTInit(32 * 1024);
-	plptr_t* args = {
+	plptr_t args = {
 		.pointer = argv,
 		.size = argc
 	};

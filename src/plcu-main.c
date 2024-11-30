@@ -1,3 +1,4 @@
+#define PLRT_ENABLE_HANDLER
 #include <pl-coreutils.h>
 #include <config.h>
 #include <errno.h>
@@ -13,18 +14,18 @@ int plCULoadKeyboardMap(int mapFile, int consoleFile){
 	uint16_t keyValues[EMBEDDED_NR_KEYS];
 	struct kbentry keyEntry;
 
-	read(keymapFile, keyFlags, 7);
+	read(mapFile, keyFlags, 7);
 	if(strcmp(keyFlags, "bkeymap") != 0){
 		fputs("Invalid keymap\n", stderr);
 		exit(1);
 	}
 
-	read(keymapFile, keyFlags, MAX_NR_KEYMAPS);
+	read(mapFile, keyFlags, MAX_NR_KEYMAPS);
 	for(int i = 0; i < MAX_NR_KEYMAPS; i++){
 		if(keyFlags[i] != 1)
 			continue;
 
-		read(keymapFile, keyValues, EMBEDDED_NR_KEYS * sizeof(uint16_t));
+		read(mapFile, keyValues, EMBEDDED_NR_KEYS * sizeof(uint16_t));
 		for(int j = 0; j < EMBEDDED_NR_KEYS; j++){
 			keyEntry.kb_index = j;
 			keyEntry.kb_table = i;
@@ -49,13 +50,13 @@ int plCUCheckPassword(char* username, char* password){
 	if(username == NULL || password == NULL)
 		plRTPanic("plCUCheckPassword", PLRT_ERROR | PLRT_NULL_PTR, true);
 
-	struct pwd* userEntryPtr = getpwnam(username); // TODO: Replace getpwnam with getpwnam_r
+	struct passwd* userEntryPtr = getpwnam(username); // TODO: Replace getpwnam with getpwnam_r
 	if(userEntryPtr == NULL){
-		fputs("Error: User doesn't exist!\n", strerr);
+		fputs("Error: User doesn't exist!\n", stderr);
 		exit(2);
 	}
 
-	char hashedPassword; // TODO: implement this
+	char* hashedPassword = ""; // TODO: implement this
 	if((userEntryPtr->pw_passwd == NULL && strcmp(password, "") != 0) || strcmp(userEntryPtr->pw_passwd, hashedPassword) != 0)
 		return -1;
 
@@ -69,8 +70,8 @@ Returns: 0 to 255 (Depends on routine called)
 
 ***********************************************/
 
-int plCUMulticall(plptr_t* args, plmt_t* mt, plarray_t* commandList){
-	char* rawArgs = args.pointer;
+int plCUMulticall(plptr_t args, plmt_t* mt, plptr_t commandList){
+	char** rawArgs = args.pointer;
 	plcucmdlist_t* rawCmdList = commandList.pointer;
 	if(strcmp(rawArgs[0], "true") == 0){
 		return 0;
@@ -86,13 +87,13 @@ int plCUMulticall(plptr_t* args, plmt_t* mt, plarray_t* commandList){
 	}else if(strcmp(rawArgs[0], "yes") == 0){
 		while(1){
 			for(int i = 1; i < args.size; i++)
-				fputs(stdout, rawArgs[i]);
+				fputs(rawArgs[i], stdout);
 
-			fputs(stdout, "\n")
+			fputs("\n", stdout);
 		}
 	}else{
 		int i = 0;
-		while(i < commandList.size && strcmp(commandList[i].name, rawArgs[0]) != 0)
+		while(i < commandList.size && strcmp(rawCmdList[i].name, rawArgs[0]) != 0)
 			i++;
 
 		if(i >= commandList.size){

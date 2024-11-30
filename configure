@@ -10,8 +10,10 @@ exec_prefix="$prefix"
 bindir="$exec_prefix/bin"
 libdir="$prefix/lib"
 includedir="$prefix/include"
-platform="c"
+gen_conf_header=0
 indev=0
+nonportable=0
+extra=0
 
 fatal_error(){
 	echo "Error: $@!"
@@ -28,6 +30,28 @@ update_prefixes(){
 	includedir="$prefix/include"
 }
 
+check_integrity(){
+	if [ $(echo "$1" | grep -c '|') -lt 1 ]; then
+		fatal_error "Invalid project field"
+	fi
+}
+
+generate_conf_header(){
+	touch ./include/config.h
+
+	if [ $indev -gt 0 ]; then
+		echo "#define CONFIG_IN_DEVELOPMENT" >> ./include/config.h
+	fi
+
+	if [ $nonportable -gt 0 ]; then
+		echo "#define CONFIG_NONPORTABLE" >> ./include/config.h
+	fi
+
+	if [ $extra -gt 0 ]; then
+		echo "#define CONFIG_EXTRAS" >> ./include/config.h
+	fi
+}
+
 generate_config(){
 	if [ ! -f ./defaults.conf ]; then
 		fatal_error "Defaults file is missing"
@@ -36,10 +60,28 @@ generate_config(){
 	. ./defaults.conf
 
 	if [ "$main_project" = "" ]; then
-		fatal_error "Main project field is empty"
-	elif [ $(echo "$main_project" | grep -c '|') -lt 1 ]; then
-		fatal_error "Invalid main project field"
+		echo "Main project field is empty or missing. Checking for other fields..."
+		if [ "$lib_project" = "" ] && [ "$exec_project" = "" ]; then
+			fatal_error "No project fields found"
+		fi
+
+		if [ "$lib_project" != "" ]; then
+			check_integrity "$lib_project"
+		fi
+
+		if [ "$exec_project" != "" ]; then
+			check_integrity "$exec_project"
+		fi
+
+		main_project="$lib_project $exec_project"
 	fi
+
+	if [ "$extra_project" != "" ] && [ $extra -gt 0 ]; then
+		fatal_error "Feature not implemented"
+	fi
+
+	echo "Checking integrity of main project field..."
+	check_integrity "$main_project"
 
 	prefix=$(echo "$prefix" | sed "s/~/$(echo $HOME | sed 's/\//\\\//g')/g")
 	exec_prefix=$(echo "$exec_prefix" | sed "s/~/$(echo $HOME | sed 's/\//\\\//g')/g")
@@ -94,15 +136,16 @@ generate_config(){
 		compile_config_str="LDFLAGS=\"$LDFLAGS\"\n$compile_config_str"
 	fi
 
-	if [ $indev -eq 1 ]; then
-		src="$src $src_indev"
-	fi
-
 	printf "$compile_config_str\n$install_config_str\n" > ./.config
 	printf "main_project=\"$main_project\"\n\n" >> ./.config
 
 	if [ -f ./custom.conf ]; then
 		cat custom.conf >> ./.config
+	fi
+
+	if [ $gen_conf_header -gt 0 ]; then
+		echo "Generating config.h..."
+		generate_conf_header
 	fi
 }
 
@@ -163,6 +206,12 @@ while [ $# -ne 0 ]; do
 		--enable-indev)
 			indev=1
 			;;
+		--enable-nonportable)
+			nonportable=1
+			;;
+		--enable-extra)
+			extra=1
+			;;
 		--enable-w*)
 			CFLAGS="$CFLAGS -Wall"
 
@@ -175,7 +224,8 @@ while [ $# -ne 0 ]; do
 			fi
 			;;
 		--help | --*)
-			printf "CinnamonWolfy's Generic C11 Configure System v0.06\n\n"
+			echo "PortaLinux Core Utilities Configure System"
+			printf "Based on CinnamonWolfy's Generic C11 Configure System v0.06\n\n"
 			printf "Usage: $0 [OPTIONS]...\n\n"
 			echo "Install Options"
 			echo "--prefix=DIR			Set install path (default=/usr/local)"
@@ -187,6 +237,7 @@ while [ $# -ne 0 ]; do
 			echo "--target=TARGET			Set the target system"
 			echo "--enable-nonportable		Compile platform-specific modules/source files"
 			echo "--enable-indev			Compile incomplete modules/source files"
+			echo "--enable-extra			Compile modules/source files not included in the base build"
 			echo "--enable-wall			Compile with -Wall"
 			echo "--enable-wextra			Compile with -Wextra (enables -Wall)"
 			echo "--enable-werror			Compile with -Werror (enables -Wall -Wextra)"
