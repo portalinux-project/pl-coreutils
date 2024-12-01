@@ -85,11 +85,16 @@ int plCUMulticall(plptr_t args, plmt_t* mt, plptr_t commandList){
 
 		puts(currentPath);
 	}else if(strcmp(basename(rawArgs[0]), "yes") == 0){
-		while(1){
-			for(int i = 1; i < args.size; i++)
-				fputs(rawArgs[i], stdout);
+		if(args.size == 1){
+			while(1)
+				printf("y\n");
+		}else{
+			while(1){
+				for(int i = 1; i < args.size; i++)
+					fputs(rawArgs[i], stdout);
 
-			fputs("\n", stdout);
+				fputs("\n", stdout);
+			}
 		}
 	}else{
 		int i = 0;
