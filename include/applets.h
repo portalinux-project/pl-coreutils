@@ -1,5 +1,5 @@
-PLCU_CREATE_DEFINITION(plcu_test)
+PLCU_CREATE_DEFINITION(plcu_plkeyb)
 
 PLCU_START_ENTLIST
-PLCU_ADD_ENTRY("test", plcu_test)
+PLCU_ADD_ENTRY("plkeyb", plcu_plkeyb)
 PLCU_END_ENTLIST

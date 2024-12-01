@@ -73,18 +73,18 @@ Returns: 0 to 255 (Depends on routine called)
 int plCUMulticall(plptr_t args, plmt_t* mt, plptr_t commandList){
 	char** rawArgs = args.pointer;
 	plcucmdlist_t* rawCmdList = commandList.pointer;
-	if(strcmp(rawArgs[0], "true") == 0){
+	if(strcmp(basename(rawArgs[0]), "true") == 0){
 		return 0;
-	}else if(strcmp(rawArgs[0], "false") == 0){
+	}else if(strcmp(basename(rawArgs[0]), "false") == 0){
 		return 1;
-	}else if(strcmp(rawArgs[0], "pwd") == 0){
+	}else if(strcmp(basename(rawArgs[0]), "pwd") == 0){
 		char currentPath[4096];
 		void* errorCheck = getcwd(currentPath, 4096);
 		if(errorCheck == NULL)
 			plRTPanic("plCUMulticall", PLRT_ERROR | PLRT_ERRNO | errno, false);
 
 		puts(currentPath);
-	}else if(strcmp(rawArgs[0], "yes") == 0){
+	}else if(strcmp(basename(rawArgs[0]), "yes") == 0){
 		while(1){
 			for(int i = 1; i < args.size; i++)
 				fputs(rawArgs[i], stdout);

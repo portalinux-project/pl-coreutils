@@ -7,8 +7,9 @@ void printArgsError(){
 	fputs("Run `plkeyb --help` for more information\n", stderr);
 }
 
-int plkeyb_main(int argc, char* argv[]){
+int plcu_plkeyb(plptr_t args, plmt_t* mt){
 	bool keymapIsPath = false;
+	char** rawArgs = args.pointer;
 	char* activeKeyPath = NULL;
 	char keymapName[256] = "";
 	char keymapPath[1024] = "";
@@ -16,12 +17,12 @@ int plkeyb_main(int argc, char* argv[]){
 	int keymapfd = -1;
 	char junk = 0;
 
-	if(argc < 2){
+	if(args.size < 2){
 		printArgsError();
 		return 1;
 	}else{
-		for(int i = 1; i < argc; i++){
-			if(strcmp("--help", argv[i]) == 0){
+		for(int i = 1; i < args.size; i++){
+			if(strcmp("--help", rawArgs[i]) == 0){
 				printf("PortaLinux Keyboard Tool, v0.01\n\n");
 				printf("Usage: plkeyb [options] keymap\n\n");
 				printf("Load a different keyboard layout\n\n");
@@ -29,20 +30,20 @@ int plkeyb_main(int argc, char* argv[]){
 				printf("--keymapdir [/path/to/dir/]	Use path as the keymap directory\n");
 				printf("--kmapispath			Treat `keymap` as a relative path\n");
 				return 0;
-			}else if(strcmp("--keymapdir", argv[i]) == 0){
-				activeKeyPath = argv[i + 1];
+			}else if(strcmp("--keymapdir", rawArgs[i]) == 0){
+				activeKeyPath = rawArgs[i + 1];
 				i++;
-			}else if(strcmp("--kmapispath", argv[i]) == 0){
+			}else if(strcmp("--kmapispath", rawArgs[i]) == 0){
 				keymapIsPath = true;
 			}
 
-			if(i == argc){
+			if(i == args.size){
 				printArgsError();
 				return 1;
 			}
 		}
 
-		strncpy(keymapName, argv[argc - 1], 256);
+		strncpy(keymapName, rawArgs[args.size - 1], 256);
 	}
 
 	strcpy(keymapPath, "/dev/tty");
@@ -86,4 +87,6 @@ int plkeyb_main(int argc, char* argv[]){
 
 	close(consolefd);
 	close(keymapfd);
+
+	return 0;
 }
