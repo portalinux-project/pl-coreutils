@@ -2,7 +2,7 @@
 #include <config.h>
 
 #include <applets.h>
-#define PLCU_APPLET_AMNT 1
+//#define PLCU_APPLET_AMNT 8
 
 void plCUPrintCommands(plptr_t commandList){
 	plcucmdlist_t* rawCmdList = commandList.pointer;
@@ -60,7 +60,7 @@ int main(int argc, char* argv[]){
 			}else if(strcmp(argv[1], "--list") == 0){
 				plCUPrintCommands(commandList);
 			}else if(strstr(argv[1], "--") != argv[1]){
-				args.pointer = ((char**)argv + 1);
+				args.pointer = (char**)(argv + 1);
 				args.size--;
 			}else{
 				plCUPrintHelp(commandList);

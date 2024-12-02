@@ -1,3 +1,4 @@
+#define PLRT_ENABLE_HANDLER
 #include <pl-coreutils.h>
 
 char* keyPaths[3] = { "/etc/keymaps/", "/opt/share/keymaps/", "/usr/share/keymaps/" };

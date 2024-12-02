@@ -6,6 +6,7 @@
 #include <plrt.h>
 #include <fcntl.h>
 #include <pwd.h>
+#include <grp.h>
 #include <libgen.h>
 #include <shadow.h>
 #include <sys/ioctl.h>

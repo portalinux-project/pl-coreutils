@@ -38,6 +38,7 @@ check_integrity(){
 
 generate_conf_header(){
 	touch ./include/config.h
+	printf "" > ./include/config.h
 
 	if [ $indev -gt 0 ]; then
 		echo "#define CONFIG_IN_DEVELOPMENT" >> ./include/config.h
@@ -49,6 +50,10 @@ generate_conf_header(){
 
 	if [ $extra -gt 0 ]; then
 		echo "#define CONFIG_EXTRAS" >> ./include/config.h
+	fi
+
+	if [ "$custom_conf_entries" != "" ]; then
+		echo "$custom_conf_entries" >> ./include/config.h
 	fi
 }
 

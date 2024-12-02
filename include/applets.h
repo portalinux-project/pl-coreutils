@@ -1,5 +1,23 @@
 PLCU_CREATE_DEFINITION(plcu_plkeyb)
+PLCU_CREATE_DEFINITION(uu_dirname)
+PLCU_CREATE_DEFINITION(uu_echo)
+PLCU_CREATE_DEFINITION(uu_id)
+PLCU_CREATE_DEFINITION(uu_seq)
+PLCU_CREATE_DEFINITION(uu_sleep)
+PLCU_CREATE_DEFINITION(uu_uname)
+PLCU_CREATE_DEFINITION(uu_whoami)
+PLCU_CREATE_DEFINITION(uu_tty)
+PLCU_CREATE_DEFINITION(uu_printenv)
 
 PLCU_START_ENTLIST
 PLCU_ADD_ENTRY("plkeyb", plcu_plkeyb)
+PLCU_ADD_ENTRY("dirname", uu_dirname)
+PLCU_ADD_ENTRY("echo", uu_echo)
+PLCU_ADD_ENTRY("id", uu_id)
+PLCU_ADD_ENTRY("seq", uu_seq)
+PLCU_ADD_ENTRY("sleep", uu_sleep)
+PLCU_ADD_ENTRY("uname", uu_uname)
+PLCU_ADD_ENTRY("whoami", uu_whoami)
+PLCU_ADD_ENTRY("tty", uu_tty)
+PLCU_ADD_ENTRY("printenv", uu_printenv)
 PLCU_END_ENTLIST
