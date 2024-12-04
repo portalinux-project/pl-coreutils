@@ -3,11 +3,6 @@
 
 char* keyPaths[3] = { "/etc/keymaps/", "/opt/share/keymaps/", "/usr/share/keymaps/" };
 
-void printArgsError(){
-	fputs("Not enough arguments\n", stderr);
-	fputs("Run `plkeyb --help` for more information\n", stderr);
-}
-
 int plcu_plkeyb(plptr_t args, plmt_t* mt){
 	bool keymapIsPath = false;
 	char** rawArgs = args.pointer;
@@ -19,17 +14,17 @@ int plcu_plkeyb(plptr_t args, plmt_t* mt){
 	char junk = 0;
 
 	if(args.size < 2){
-		printArgsError();
+		plCUPrintArgsError(1, "plkeyb");
 		return 1;
 	}else{
 		for(int i = 1; i < args.size; i++){
 			if(strcmp("--help", rawArgs[i]) == 0){
-				printf("PortaLinux Keyboard Tool, v0.01\n\n");
+				printf("PortaLinux Core Utilities v0.01\n\n");
 				printf("Usage: plkeyb [options] keymap\n\n");
 				printf("Load a different keyboard layout\n\n");
-				printf("Options:\n");
-				printf("--keymapdir [/path/to/dir/]	Use path as the keymap directory\n");
-				printf("--kmapispath			Treat `keymap` as a relative path\n");
+				puts("Options:");
+				puts("--keymapdir [/path/to/dir/]	Use path as the keymap directory");
+				puts("--kmapispath			Treat `keymap` as a relative path");
 				return 0;
 			}else if(strcmp("--keymapdir", rawArgs[i]) == 0){
 				activeKeyPath = rawArgs[i + 1];
@@ -39,7 +34,7 @@ int plcu_plkeyb(plptr_t args, plmt_t* mt){
 			}
 
 			if(i == args.size){
-				printArgsError();
+				plCUPrintArgsError(1, "plkeyb");
 				return 1;
 			}
 		}

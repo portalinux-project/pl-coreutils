@@ -63,6 +63,26 @@ int plCUCheckPassword(char* username, char* password){
 	return 0;
 }
 
+/*********************************************
+
+plCUPrintArgsError: Prints out a command-line error
+Returns: Nothing
+
+**********************************************/
+
+void plCUPrintArgsError(uint8_t type, char* progName){
+	switch(type){
+		case 1:
+			puts("Not enough arguments");
+			break;
+		case 2:
+			puts("Unknown option");
+			break;
+	}
+
+	printf("Run `%s --help` for more information\n", progName);
+}
+
 /***********************************************
 
 plCUMulticall: Multi-call entrypoint

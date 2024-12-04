@@ -8,6 +8,7 @@ PLCU_CREATE_DEFINITION(uu_uname)
 PLCU_CREATE_DEFINITION(uu_whoami)
 PLCU_CREATE_DEFINITION(uu_tty)
 PLCU_CREATE_DEFINITION(uu_printenv)
+PLCU_CREATE_DEFINITION(plcu_ls)
 
 PLCU_START_ENTLIST
 PLCU_ADD_ENTRY("plkeyb", plcu_plkeyb)
@@ -20,4 +21,5 @@ PLCU_ADD_ENTRY("uname", uu_uname)
 PLCU_ADD_ENTRY("whoami", uu_whoami)
 PLCU_ADD_ENTRY("tty", uu_tty)
 PLCU_ADD_ENTRY("printenv", uu_printenv)
+PLCU_ADD_ENTRY("ls", plcu_ls)
 PLCU_END_ENTLIST

@@ -41,4 +41,5 @@ typedef struct plcucmdlist {
 
 int plCULoadKeyboardMap(int mapFile, int consoleFile);
 int plCUCheckPassword(char* username, char* password);
+void plCUPrintArgsError(uint8_t type, char* progName);
 int plCUMulticall(plptr_t args, plmt_t* mt, plptr_t commandList);
