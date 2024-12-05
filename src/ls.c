@@ -7,7 +7,7 @@ int plcu_ls(plptr_t args, plmt_t* mt){
 	bool displayHidden = false;
 	if(args.size > 1){
 		char** rawArgs = args.pointer;
-		for(int i = 0; i < args.size; i++){
+		for(int i = 1; i < args.size; i++){
 			if(strstr(rawArgs[i], "-") == rawArgs[i]){
 				if(strcmp("--help", rawArgs[i]) == 0){
 					printf("PortaLinux Core Utilities v0.01\n\n");
@@ -29,17 +29,29 @@ int plcu_ls(plptr_t args, plmt_t* mt){
 		}
 	}
 
-	plptr_t dirList = plRTGetDirents(dirPath, mt);
-	struct dirent* rawDirList = dirList.pointer;
-	if(sortList)
-		plRTSortDirents(dirList);
-
-	for(int i = 0; i < dirList.size - 1; i++){
-		bool containsDot = strstr(rawDirList[i].d_name, ".") == rawDirList[i].d_name;
-		if(!containsDot || (containsDot && displayHidden))
-			printf("%s  ", rawDirList[i].d_name);
+	struct stat pathStats;
+	int status = stat(dirPath, &pathStats);
+	if(status != 0){
+		printf("%s: File not found\n", dirPath);
+		return 0;
 	}
 
-	printf("%s\n", rawDirList[dirList.size - 1].d_name);
+	if(S_ISDIR(pathStats.st_mode)){
+		plptr_t dirList = plRTGetDirents(dirPath, mt);
+		struct dirent* rawDirList = dirList.pointer;
+		if(sortList)
+			plRTSortDirents(dirList);
+
+		for(int i = 0; i < dirList.size - 1; i++){
+			bool containsDot = strstr(rawDirList[i].d_name, ".") == rawDirList[i].d_name;
+			if(!containsDot || (containsDot && displayHidden))
+				printf("%s  ", rawDirList[i].d_name);
+		}
+
+		printf("%s\n", rawDirList[dirList.size - 1].d_name);
+	}else{
+		printf("%s\n", dirPath);
+	}
+
 	return 0;
 }
