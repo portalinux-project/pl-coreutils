@@ -31,11 +31,9 @@ int plcu_plkeyb(plptr_t args, plmt_t* mt){
 				i++;
 			}else if(strcmp("--kmapispath", rawArgs[i]) == 0){
 				keymapIsPath = true;
-			}
-
-			if(i == args.size){
-				plCUPrintArgsError(1, "plkeyb");
-				return 1;
+			}else{
+				plCUPrintArgsError(2, "plkeyb");
+				return 0;
 			}
 		}
 
