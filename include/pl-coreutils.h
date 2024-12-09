@@ -9,6 +9,7 @@
 #include <grp.h>
 #include <libgen.h>
 #include <shadow.h>
+#include <crypt.h>
 #include <sys/ioctl.h>
 #include <linux/kd.h>
 #include <linux/keyboard.h>

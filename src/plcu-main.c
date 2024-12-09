@@ -56,9 +56,19 @@ int plCUCheckPassword(char* username, char* password){
 		exit(2);
 	}
 
-	char* hashedPassword = ""; // TODO: implement this
-	if((userEntryPtr->pw_passwd == NULL && strcmp(password, "") != 0) || strcmp(userEntryPtr->pw_passwd, hashedPassword) != 0)
-		return -1;
+	if(userEntryPtr->pw_passwd != NULL && strcmp("", userEntryPtr->pw_passwd) != 0){
+		if(strcmp("", password) == 0)
+			return -1;
+
+		char* hashedPassword = crypt(password, userEntryPtr->pw_passwd);
+		if(hashedPassword == NULL){
+			fputs("Error: crypt() failed!\n", stderr);
+			exit(2);
+		}
+
+		if(strcmp(userEntryPtr->pw_passwd, hashedPassword) != 0)
+			return -1;
+	}
 
 	return 0;
 }
@@ -81,6 +91,17 @@ void plCUPrintArgsError(uint8_t type, char* progName){
 	}
 
 	printf("Run `%s --help` for more information\n", progName);
+}
+
+/*********************************************
+
+plCUPrintError: Prints an error message based on the given error code
+Returns: Nothing
+
+*********************************************/
+
+void plCUPrintError(char* msg, plrtret_t errCode){
+	// implement thing
 }
 
 /***********************************************
