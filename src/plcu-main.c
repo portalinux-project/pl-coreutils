@@ -50,23 +50,35 @@ int plCUCheckPassword(char* username, char* password){
 	if(username == NULL || password == NULL)
 		plRTPanic("plCUCheckPassword", PLRT_ERROR | PLRT_NULL_PTR, true);
 
-	struct passwd* userEntryPtr = getpwnam(username); // TODO: Replace getpwnam with getpwnam_r
+	struct passwd* userEntryPtr = getpwnam(username);
+	char* storedPassword;
+
 	if(userEntryPtr == NULL){
 		fputs("Error: User doesn't exist!\n", stderr);
 		exit(2);
+	}else if(*(userEntryPtr->pw_passwd) == 'x'){
+		struct spwd* shadowUserEntPtr = getspnam(username);
+		if(shadowUserEntPtr == NULL){
+			fputs("Error: Shadow database is invalid or inaccessible!\n", stderr);
+			exit(2);
+		}
+
+		storedPassword = shadowUserEntPtr->sp_pwdp;
+	}else{
+		storedPassword = userEntryPtr->pw_passwd;
 	}
 
-	if(userEntryPtr->pw_passwd != NULL && strcmp("", userEntryPtr->pw_passwd) != 0){
+	if(storedPassword != NULL && strcmp("", storedPassword) != 0){
 		if(strcmp("", password) == 0)
 			return -1;
 
-		char* hashedPassword = crypt(password, userEntryPtr->pw_passwd);
+		char* hashedPassword = crypt(password, storedPassword);
 		if(hashedPassword == NULL){
 			fputs("Error: crypt() failed!\n", stderr);
 			exit(2);
 		}
 
-		if(strcmp(userEntryPtr->pw_passwd, hashedPassword) != 0)
+		if(strcmp(storedPassword, hashedPassword) != 0)
 			return -1;
 	}
 
