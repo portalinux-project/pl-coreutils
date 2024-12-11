@@ -6,8 +6,10 @@ int plcu_login(plptr_t args, plmt_t* mt){
 	char password[4096];
 
 	fputs("login: ", stdout);
+	fflush(stdout);
 	fgets(username, 512, stdin);
 	fputs("password: ", stdout);
+	fflush(stdout);
 	fgets(password, 4096, stdin);
 
 	char* newlines[2];
