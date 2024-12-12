@@ -3,6 +3,7 @@
 * (c) 2024 CinnamonWolfy & Co. *
 * Under MIT License            *
 \******************************/
+#define _XOPEN_SOURCE 700
 #include <plrt.h>
 #include <fcntl.h>
 #include <pwd.h>
