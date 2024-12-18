@@ -7,5 +7,5 @@ once it reaches parity with the most recent release of Toybox.
 
 # Contributions
 
-This project won't be receiving any contributions until the first initial
-release is written and posted
+To contribute to the project, please create a pull request with your changes
+and we will look over it when we get the chance.
